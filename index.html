@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Todo</title>
+</head>
+<body>
+	<div>
+		<h2>Todo</h2>
+		<h4>A simple todo list maintainer.</h4>
+	</div>
+	<div>
+		<input id="title" type="text" placeholder="Title" name="title">
+		<textarea id="note" placeholder="Note"></textarea>
+		<button onclick="addButtonClicked()">Add</button>
+	</div>
+	<script type="text/javascript">
+		let todos = [];
+
+		function addButtonClicked() {
+			let title = document.getElementById('title').value;
+			let note = document.getElementById('note').value;
+			console.log(`Add a new todo with title: "${ title }" and note: "${ note }"`);
+			addRecord({title, note});
+		}
+
+		function addRecord(todo) {
+			todos.push(todo);
+			let tableBody = document.getElementById('tbody');
+
+			let tableBodyRow = document.createElement('tr');
+			tableBody.appendChild(tableBodyRow);
+
+			let sno = tableBodyRow.insertCell();
+			sno.innerHTML = todos.length;
+			sno.style.border = '1px solid black';
+
+			let title = tableBodyRow.insertCell();
+			title.innerHTML = todo.title;
+			title.style.border = '1px solid black';
+
+			let note = tableBodyRow.insertCell();
+			note.innerHTML = todo.note;
+			note.style.border = '1px solid black';
+		}
+
+		function createTable() {
+			let body = document.body;
+			let table = document.createElement('table');
+			// table.style.width = '200px';
+			table.style.border = '1px solid black';
+
+			let tableHeader = document.createElement('thead');
+			table.appendChild(tableHeader);
+
+			let tableHeaderRow = document.createElement('tr');
+			tableHeader.appendChild(tableHeaderRow);
+			let serialNo = document.createElement('th');
+			tableHeader.appendChild(serialNo);
+			serialNo.innerHTML = 'Serial No.';
+			serialNo.style.border = '1px solid black';
+
+			let titleHeader = document.createElement('th');
+			tableHeader.appendChild(titleHeader);
+			titleHeader.innerHTML = 'Title';
+			titleHeader.style.border = '1px solid black';
+			
+			let noteHeader = document.createElement('th');
+			tableHeader.appendChild(noteHeader);
+			noteHeader.innerHTML = 'Note';
+			noteHeader.style.border = '1px solid black';
+
+			let tableBody = document.createElement('tbody');
+			tableBody.id = "tbody";
+			table.appendChild(tableBody);
+
+			body.appendChild(table);
+		}
+
+		createTable();
+	</script>
+</body>
+</html>
