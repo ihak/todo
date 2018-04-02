@@ -17,10 +17,19 @@
 		let todos = [];
 
 		function addButtonClicked() {
-			let title = document.getElementById('title').value;
-			let note = document.getElementById('note').value;
+			let title = document.getElementById('title');
+			let note = document.getElementById('note');
+
+			if (title.value === "" || note.value === "") {
+				alert('Please provide title and note.');
+				return;
+			}
+
 			console.log(`Add a new todo with title: "${ title }" and note: "${ note }"`);
-			addRecord({title, note});
+			addRecord({title: title.value, note: note.value});
+			
+			title.value = "";
+			note.value = "";
 		}
 
 		function addRecord(todo) {
