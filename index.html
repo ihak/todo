@@ -30,6 +30,7 @@
 	</div>
 	<script type="text/javascript">
 		let todos = [];
+		const localStorageAvailable = storageAvailable('localStorage');
 
 		function addButtonClicked() {
 			let title = document.getElementById('title');
@@ -43,10 +44,20 @@
 			console.log(`Add a new todo with title: "${ title }" and note: "${ note }"`);
 			let todo = {title: title.value, note: note.value};
 			todos.push(todo);
-			addRecord(todo, todos.length);
+			let id = todos.length;
+			addRecord(todo, id);
 			
 			title.value = "";
 			note.value = "";
+
+			if (localStorageAvailable) {
+				let todostr = JSON.stringify(todos);
+				localStorage.setItem('todos', todostr);
+
+				if(localStorage.getItem('todos')) {
+					console.log(JSON.parse(localStorage.getItem('todos')));
+				}
+			}
 		}
 
 		function addRecord(todo, index) {
@@ -92,6 +103,30 @@
 				addRecord(todo, i+1);
 			}
 		}
+
+		function storageAvailable(type) {
+			try {
+				var storage = window[type],
+				x = '__storage_test__';
+				storage.setItem(x, x);
+				storage.removeItem(x);
+				return true;
+			}
+			catch(e) {
+				return e instanceof DOMException && (
+            	// everything except Firefox
+            	e.code === 22 ||
+            	// Firefox
+            	e.code === 1014 ||
+            	// test name field too, because code might not be present
+            	// everything except Firefox
+            	e.name === 'QuotaExceededError' ||
+            	// Firefox
+            	e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+            	// acknowledge QuotaExceededError only if there's something already stored
+            	storage.length !== 0;
+        	}
+    	}
 
 		function createTable() {
 			let body = document.body;
