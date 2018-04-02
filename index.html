@@ -13,6 +13,21 @@
 		<textarea id="note" placeholder="Note"></textarea>
 		<button onclick="addButtonClicked()">Add</button>
 	</div>
+	<div>
+		<table style='border: 1px solid black'>
+			<thead>
+				<tr>
+					<th style='border: 1px solid black'>S.No</th>
+					<th style='border: 1px solid black'>Title</th>
+					<th style='border: 1px solid black'>Note</th>
+					<th style='border: 1px solid black'>Delete</th>
+				</tr>
+			</thead>
+			<tbody id='tbody'>
+				
+			</tbody>
+		</table>
+	</div>
 	<script type="text/javascript">
 		let todos = [];
 
@@ -26,21 +41,24 @@
 			}
 
 			console.log(`Add a new todo with title: "${ title }" and note: "${ note }"`);
-			addRecord({title: title.value, note: note.value});
+			let todo = {title: title.value, note: note.value};
+			todos.push(todo);
+			addRecord(todo, todos.length);
 			
 			title.value = "";
 			note.value = "";
 		}
 
-		function addRecord(todo) {
-			todos.push(todo);
+		function addRecord(todo, index) {
+			let id = index;
+
 			let tableBody = document.getElementById('tbody');
 
 			let tableBodyRow = document.createElement('tr');
 			tableBody.appendChild(tableBodyRow);
 
 			let sno = tableBodyRow.insertCell();
-			sno.innerHTML = todos.length;
+			sno.innerHTML = id;
 			sno.style.border = '1px solid black';
 
 			let title = tableBodyRow.insertCell();
@@ -49,7 +67,30 @@
 
 			let note = tableBodyRow.insertCell();
 			note.innerHTML = todo.note;
-			note.style.border = '1px solid black';
+			note.style.border = '1px solid black';	
+
+			let del = tableBodyRow.insertCell();
+			del.id = id;
+			del.innerHTML = '<button onclick="deleteButtonHandler(this)">Delete</button>';
+			del.style.border = '1px solid black';
+		}
+
+		function deleteButtonHandler(button) {
+			let id = button.parentElement.id - 1;
+			button.parentElement.parentElement.remove();
+			todos.splice(id, 1);
+
+			refreshTable();
+		}
+
+		function refreshTable() {
+			let tbody = document.getElementById('tbody');
+			tbody.innerHTML = '';
+
+			for (var i = 0; i < todos.length; i++) {
+				let todo = todos[i];
+				addRecord(todo, i+1);
+			}
 		}
 
 		function createTable() {
@@ -84,8 +125,6 @@
 
 			body.appendChild(table);
 		}
-
-		createTable();
 	</script>
 </body>
 </html>
