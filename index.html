@@ -2,6 +2,8 @@
 <html>
 <head>
 	<title>Todo</title>
+	<meta charset="utf-8">
+	<script src="index.js"></script>
 </head>
 <body>
 	<div>
@@ -29,137 +31,7 @@
 		</table>
 	</div>
 	<script type="text/javascript">
-		let todos = [];
-		const localStorageAvailable = storageAvailable('localStorage');
 
-		function addButtonClicked() {
-			let title = document.getElementById('title');
-			let note = document.getElementById('note');
-
-			if (title.value === "" || note.value === "") {
-				alert('Please provide title and note.');
-				return;
-			}
-
-			console.log(`Add a new todo with title: "${ title }" and note: "${ note }"`);
-			let todo = {title: title.value, note: note.value};
-			todos.push(todo);
-			let id = todos.length;
-			addRecord(todo, id);
-			
-			title.value = "";
-			note.value = "";
-
-			if (localStorageAvailable) {
-				let todostr = JSON.stringify(todos);
-				localStorage.setItem('todos', todostr);
-
-				if(localStorage.getItem('todos')) {
-					console.log(JSON.parse(localStorage.getItem('todos')));
-				}
-			}
-		}
-
-		function addRecord(todo, index) {
-			let id = index;
-
-			let tableBody = document.getElementById('tbody');
-
-			let tableBodyRow = document.createElement('tr');
-			tableBody.appendChild(tableBodyRow);
-
-			let sno = tableBodyRow.insertCell();
-			sno.innerHTML = id;
-			sno.style.border = '1px solid black';
-
-			let title = tableBodyRow.insertCell();
-			title.innerHTML = todo.title;
-			title.style.border = '1px solid black';
-
-			let note = tableBodyRow.insertCell();
-			note.innerHTML = todo.note;
-			note.style.border = '1px solid black';	
-
-			let del = tableBodyRow.insertCell();
-			del.id = id;
-			del.innerHTML = '<button onclick="deleteButtonHandler(this)">Delete</button>';
-			del.style.border = '1px solid black';
-		}
-
-		function deleteButtonHandler(button) {
-			let id = button.parentElement.id - 1;
-			button.parentElement.parentElement.remove();
-			todos.splice(id, 1);
-
-			refreshTable();
-		}
-
-		function refreshTable() {
-			let tbody = document.getElementById('tbody');
-			tbody.innerHTML = '';
-
-			for (var i = 0; i < todos.length; i++) {
-				let todo = todos[i];
-				addRecord(todo, i+1);
-			}
-		}
-
-		function storageAvailable(type) {
-			try {
-				var storage = window[type],
-				x = '__storage_test__';
-				storage.setItem(x, x);
-				storage.removeItem(x);
-				return true;
-			}
-			catch(e) {
-				return e instanceof DOMException && (
-            	// everything except Firefox
-            	e.code === 22 ||
-            	// Firefox
-            	e.code === 1014 ||
-            	// test name field too, because code might not be present
-            	// everything except Firefox
-            	e.name === 'QuotaExceededError' ||
-            	// Firefox
-            	e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
-            	// acknowledge QuotaExceededError only if there's something already stored
-            	storage.length !== 0;
-        	}
-    	}
-
-		function createTable() {
-			let body = document.body;
-			let table = document.createElement('table');
-			// table.style.width = '200px';
-			table.style.border = '1px solid black';
-
-			let tableHeader = document.createElement('thead');
-			table.appendChild(tableHeader);
-
-			let tableHeaderRow = document.createElement('tr');
-			tableHeader.appendChild(tableHeaderRow);
-			let serialNo = document.createElement('th');
-			tableHeader.appendChild(serialNo);
-			serialNo.innerHTML = 'Serial No.';
-			serialNo.style.border = '1px solid black';
-
-			let titleHeader = document.createElement('th');
-			tableHeader.appendChild(titleHeader);
-			titleHeader.innerHTML = 'Title';
-			titleHeader.style.border = '1px solid black';
-			
-			let noteHeader = document.createElement('th');
-			tableHeader.appendChild(noteHeader);
-			noteHeader.innerHTML = 'Note';
-			noteHeader.style.border = '1px solid black';
-
-			let tableBody = document.createElement('tbody');
-			tableBody.id = "tbody";
-			table.appendChild(tableBody);
-
-			body.appendChild(table);
-		}
 	</script>
 </body>
 </html>
